@@ -1,11 +1,18 @@
 package baseball;
 
+//import static camp.nextstep.edu.missionutils.Randoms.pickNumberInRange;
+import java.util.Random;
+
 public class GameController {
 
-    private boolean keepPlayingGame = true;
-    private int ANSWER_LENGTH = 3;
+    private static final int MIN_NUMBER=1;
+    private static final int MAX_NUMBER=9;
+    private static final int NUMBER_RANGE=MAX_NUMBER-MIN_NUMBER;
+    private static final int ANSWER_LENGTH = 3;
 
-    private IOController ioController = new IOController(ANSWER_LENGTH);
+    private boolean keepPlayingGame = true;
+
+    private final IOController ioController = new IOController(ANSWER_LENGTH);
 
     public GameController() {
     }
@@ -23,32 +30,77 @@ public class GameController {
         boolean isCorrectAnswer = false;
 
         while (!isCorrectAnswer) {
-            String userAnswer = ioController.getUserAnswer();;
-            isCorrectAnswer=checkUserAnswer();
+            String userAnswer = ioController.getUserAnswer();
+            isCorrectAnswer=checkUserAnswer(realAnswer,userAnswer);
         }
     }
-
 
     private void askKeepPlayingGame() {
         keepPlayingGame= ioController.getUserReply();
     }
 
     private String getRealAnswerByRandom() {
-        return "123";
+        boolean[] existence=new boolean[NUMBER_RANGE];
+        String realAnswer="";
+
+        for(int i=0;i<ANSWER_LENGTH;++i){
+            int randomNumber=pickNumberInRange(MIN_NUMBER,MAX_NUMBER);
+            if(existence[randomNumber-MIN_NUMBER]){
+                i--;
+                continue;
+            }
+
+            existence[randomNumber-MIN_NUMBER]=true;
+            realAnswer+=Integer.toString(randomNumber);
+        }
+
+        return realAnswer;
     }
 
-    private boolean checkUserAnswer(){
+    private boolean checkUserAnswer(String realAnswer,String userAnswer){
         int strikeCount=0;
         int ballCount=0;
 
         for(int i=0;i<ANSWER_LENGTH;++i){
-
+            if(isStrike(realAnswer.charAt(i),userAnswer.charAt(i))){
+                strikeCount++;
+                continue;
+            }
+            if(isBall(realAnswer,userAnswer.charAt(i))){
+                ballCount++;
+            }
         }
 
-        return false;
+        ioController.announceTurnResult(strikeCount,ballCount);
+
+        return isCorrectAnswer(strikeCount,ballCount);
     }
 
     private boolean isStrike(char realChar, char userChar){
         return realChar==userChar;
+    }
+
+    private boolean isBall(String realAnswer, char userChar){
+        for(int i=0;i<ANSWER_LENGTH;++i){
+            if(realAnswer.charAt(i)==userChar){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isCorrectAnswer(int strikeCount, int ballCount){
+        return (strikeCount==ANSWER_LENGTH && ballCount==0);
+    }
+
+    private int pickNumberInRange(int min, int max){
+        if(min>max) {
+            int tmp=min;
+            min=max;
+            max=tmp;
+        }
+
+        Random random=new Random();
+        return random.nextInt(max-min+1)+min;
     }
 }
