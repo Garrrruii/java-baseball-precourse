@@ -5,7 +5,7 @@ public class GameController {
     private boolean keepPlayingGame = true;
     private int ANSWER_LENGTH = 3;
 
-    private InputController inputController = new InputController(ANSWER_LENGTH);
+    private IOController ioController = new IOController(ANSWER_LENGTH);
 
     public GameController() {
     }
@@ -23,14 +23,14 @@ public class GameController {
         boolean isCorrectAnswer = false;
 
         while (!isCorrectAnswer) {
-            String userAnswer = inputController.getUserAnswer();;
+            String userAnswer = ioController.getUserAnswer();;
             isCorrectAnswer=checkUserAnswer();
         }
     }
 
 
     private void askKeepPlayingGame() {
-        keepPlayingGame=inputController.getUserReply();
+        keepPlayingGame= ioController.getUserReply();
     }
 
     private String getRealAnswerByRandom() {
@@ -38,6 +38,12 @@ public class GameController {
     }
 
     private boolean checkUserAnswer(){
+        int strikeCount=0;
+        int ballCount=0;
+
+        for(int i=0;i<ANSWER_LENGTH;++i){
+
+        }
 
         return false;
     }
