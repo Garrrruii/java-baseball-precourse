@@ -99,4 +99,5 @@ public class IOController {
     private static void occurInputError() {
         throw new IllegalArgumentException();
     }
+
 }
