@@ -31,12 +31,11 @@ public class IOController {
         String userAnswer = "";
         try {
             userAnswer = br.readLine();
-            checkUserAnswerInputError(userAnswer);
-        } catch (Exception e) {
+        } catch (IOException e) {
             occurInputError();
         }
-        ;
 
+        checkUserAnswerInputError(userAnswer);
         return userAnswer;
     }
 
@@ -47,12 +46,12 @@ public class IOController {
         String userReply = "";
         try {
             userReply = br.readLine();
-            checkUserReplyInputError(userReply);
-        } catch (Exception e) {
+        } catch (IOException e) {
             occurInputError();
         }
 
-        return (userReply == KEEP_PLAYING_GAME);
+        checkUserReplyInputError(userReply);
+        return userReply.equals(KEEP_PLAYING_GAME);
     }
 
     public void announceTurnResult(int strikeCount, int ballCount) {
@@ -87,11 +86,10 @@ public class IOController {
     }
 
     private void checkUserReplyInputError(String userReply) {
-        if (userReply == KEEP_PLAYING_GAME || userReply == STOP_PLAYING_GAME) {
+        if (userReply.equals(KEEP_PLAYING_GAME) || userReply.equals(STOP_PLAYING_GAME)) {
             return;
         }
         occurInputError();
-
     }
 
     private static boolean isNotNaturalNumber(char c) {
@@ -101,5 +99,4 @@ public class IOController {
     private static void occurInputError() {
         throw new IllegalArgumentException();
     }
-
 }
